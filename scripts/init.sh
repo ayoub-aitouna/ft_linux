@@ -32,23 +32,26 @@ PrepareFs() {
 }
 
 AddingLfsUser() {
+    echo "Creating LFS USER"
     sudo groupadd lfs
     sudo useradd -s /bin/bash -g lfs -m -k /dev/null lfs
     echo "lfs:1122" | sudo chpasswd
     sudo chown -v lfs $LFS/{usr{,/*},lib,var,etc,bin,sbin,tools}
-    sudo cp ./scripts /home/lfs/
-    sudo cp ./config /home/lfs/
+    echo "Copying {Scrips/Config} to new UserDir"
+    sudo cp -r ./scripts/ /home/lfs/
+    sudo cp -r ./config/ /home/lfs/
+
     [ ! -e /etc/bash.bashrc ] || sudo mv -v /etc/bash.bashrc /etc/bash.bashrc.NOUSE
     case $(uname -m) in
     x86_64) sudo chown -v lfs $LFS/lib64 ;;
     esac
-
-    sudo -u lfs bash /home/lfs/scripts/init-lfs-user.sh
-    sudo -u lfs -i
+    su - lfs
+    # sudo -u lfs sh /home/lfs/scripts/init-lfs-user.sh
+    # sudo -u lfs -i
 
 }
 
-PrepareDir
-PreparePackages
-PrepareFs
+# PrepareDir
+# PreparePackages
+# PrepareFs
 AddingLfsUser
