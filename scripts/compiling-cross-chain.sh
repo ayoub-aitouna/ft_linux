@@ -301,8 +301,7 @@ installXz() {
 
 installFinalBinUtils() {
     sed '6009s/$add_dir//' -i ltmain.sh
-    mkdir -v build
-    cd build
+    mkdir -vp build
     pushd build
     ../configure \
         --prefix=/usr \
@@ -337,9 +336,8 @@ installGccpass2() {
         ;;
     esac
 
-    mkdir -v build
-    cd build
-    pushd build
+    mkdir -vp build
+    pushd ./build
     ../configure \
         --build=$(../config.guess) \
         --host=$LFS_TGT \
