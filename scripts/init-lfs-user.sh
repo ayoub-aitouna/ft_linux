@@ -1,4 +1,6 @@
 #!/bin/bash
+
+
 echo "*** Init LFS USER ENVIREMENT ***"
 
 SetupEnv() {
@@ -9,6 +11,8 @@ SetupEnv() {
         mv -v /etc/bash.bashrc /etc/bash.bashrc.NOUSE
     fi
 }
+exec source ~/.bash_profile
+exec source ~/.bashrc
 
 # sudo sh ./scripts/prerequisites.sh
 # sudo sh ./scripts/version-check.sh

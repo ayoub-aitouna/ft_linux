@@ -1,13 +1,15 @@
+#!/bin/bash
+
 prepareDir() {
     echo "------------ Preparing Dir -----------"
     echo "Preparing $PWD/$1"
     dir=$(tar -tf "$1" | head -1 | cut -f1 -d"/")
     echo "cd Into Directory: $dir"
     tar -xvf $1
-    pushd $PWD/$dir
+    pushd "$PWD/$dir"
     $2
-    rm -rf $dir
     popd
+    rm -rf "$PWD/$dir"
     echo "------------ *************** -----------"
 }
 
@@ -119,7 +121,8 @@ InstallGlibc() {
 
 installLibstdc() {
     echo "installLibstdc ..."
-    pushd $LFS/gcc-14.2.0/build
+    mkdir build
+    pushd build
     ../libstdc++-v3/configure \
         --host=$LFS_TGT \
         --build=$(../config.guess) \
@@ -362,17 +365,25 @@ installGccpass2() {
     popd
 }
 
+askForPermission() {
+    echo $1
+    read -n 1 -s -r -p "Press any key to continue ..."
+}
+
 echo "LFS ${LFS:?}"
-ls -la $LFS
+echo "*** Instlation Of Necessary Packages ***"
 
 pushd $LFS/sources
+askForPermission "Compiling a Cross-Toolchain."
+
 # chp5: Compiling a Cross-Toolchain
 prepareDir binutils-2.43.1.tar.xz installBinUtils
 prepareDir gcc-14.2.0.tar.xz IntallGcc
 prepareDir linux-6.10.5.tar.xz InstallLinuxApiHeaders
 prepareDir glibc-2.40.tar.xz InstallGlibc
-installLibstdc
+prepareDir gcc-14.2.0.tar.xz installLibstdc
 
+askForPermission "Cross Compiling Temporary Tools."
 #chap6: Cross Compiling Temporary Tools
 prepareDir m4-1.4.19.tar.xz installM4
 prepareDir ncurses-6.5.tar.gz installNcurses
