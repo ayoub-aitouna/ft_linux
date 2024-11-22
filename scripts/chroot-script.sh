@@ -165,3 +165,8 @@ prepareDir util-linux-2.40.2.tar.xz InstallUtilLinux
 
 # Cleaning
 rm -rf /usr/share/{info,man,doc}/*
+
+find /usr/{lib,libexec} -name \*.la -delete
+
+
+rm -rf /tools
