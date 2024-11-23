@@ -1,5 +1,7 @@
 #!/bin/bash
 
+export PATH=/usr/bin:/bin:/usr/sbin:/sbin:$PATH
+
 prepareDir() {
     echo "------------ Preparing Dir -----------"
     echo "Preparing $PWD/$1"
@@ -367,7 +369,7 @@ installGccpass2() {
 
 askForPermission() {
     echo $1
-    read -n 1 -s -r -p "Press any key to continue ..."
+    # read -n 1 -s -r -p "Press any key to continue ..."
 }
 
 echo "LFS ${LFS:?}"
@@ -377,29 +379,76 @@ pushd $LFS/sources
 askForPermission "Compiling a Cross-Toolchain."
 
 # chp5: Compiling a Cross-Toolchain
+
+askForPermission "Installing BinUtils."
 prepareDir binutils-2.43.1.tar.xz installBinUtils
+
+askForPermission "Installing GCC."
 prepareDir gcc-14.2.0.tar.xz IntallGcc
+
+askForPermission "Installing Linux API Headers."
 prepareDir linux-6.10.5.tar.xz InstallLinuxApiHeaders
+
+askForPermission "Installing Glibc."
 prepareDir glibc-2.40.tar.xz InstallGlibc
+
+askForPermission "Installing Libstdc."
 prepareDir gcc-14.2.0.tar.xz installLibstdc
 
-askForPermission "Cross Compiling Temporary Tools."
+
+export PATH=$LFS/tools/bin:$PATH
+
 #chap6: Cross Compiling Temporary Tools
+askForPermission "Cross Compiling Temporary Tools."
+
+askForPermission "Installing M4."
 prepareDir m4-1.4.19.tar.xz installM4
+
+askForPermission "Installing Ncurses."
 prepareDir ncurses-6.5.tar.gz installNcurses
+
+askForPermission "Installing Bash."
 prepareDir bash-5.2.32.tar.gz installbash
+
+askForPermission "Installing Coreutils."
 prepareDir coreutils-9.5.tar.xz installCoreutils
+
+askForPermission "Installing Diffutils."
 prepareDir diffutils-3.10.tar.xz installDiffutils
+
+askForPermission "Installing File."
 prepareDir file-5.45.tar.gz installFile
+
+askForPermission "Installing FindUtils."
 prepareDir findutils-4.10.0.tar.xz installFindUtils
+
+askForPermission "Installing Gawk."
 prepareDir gawk-5.3.0.tar.xz installGawk
+
+askForPermission "Installing Grep."
 prepareDir grep-3.11.tar.xz installGrep
+
+askForPermission "Installing Gzip."
 prepareDir gzip-1.13.tar.xz installGzip
+
+askForPermission "Installing Make."
 prepareDir make-4.4.1.tar.gz installMake
+
+askForPermission "Installing Patch."
 prepareDir patch-2.7.6.tar.xz installPatch
+
+askForPermission "Installing Sed."
 prepareDir sed-4.9.tar.xz installSed
+
+askForPermission "Installing Tar."
 prepareDir tar-1.35.tar.xz installTar
+
+askForPermission "Installing Xz."
 prepareDir xz-5.6.2.tar.xz installXz
+
+askForPermission "Installing BinUtils. Pass 2"
 prepareDir binutils-2.43.1.tar.xz installFinalBinUtils
+
+askForPermission "Installing GCC. Pass 2"
 prepareDir gcc-14.2.0.tar.xz installGccpass2
 popd

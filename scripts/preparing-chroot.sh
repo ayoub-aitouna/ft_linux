@@ -1,29 +1,31 @@
 #!/bin/bash
 
 
+echo "LFS ${LFS:?}"
+ls -la $LFS
 
 #Changing Ownership
-chown --from lfs -R root:root $LFS/{usr,lib,var,etc,bin,sbin,tools}
+sudo chown --from lfs -R root:root $LFS/{usr,lib,var,etc,bin,sbin,tools}
 case $(uname -m) in
-x86_64) chown --from lfs -R root:root $LFS/lib64 ;;
+x86_64) sudo chown --from lfs -R root:root $LFS/lib64 ;;
 esac
 
 #Preparing Virtual Kernel File Systems
-mkdir -pv $LFS/{dev,proc,sys,run}
-mount -v --bind /dev $LFS/dev
+sudo mkdir -pv $LFS/{dev,proc,sys,run}
+sudo mount -v --bind /dev $LFS/dev
 
-mount -vt devpts devpts -o gid=5,mode=0620 $LFS/dev/pts
-mount -vt proc proc $LFS/proc
-mount -vt sysfs sysfs $LFS/sys
-mount -vt tmpfs tmpfs $LFS/run
+sudo mount -vt devpts devpts -o gid=5,mode=0620 $LFS/dev/pts
+sudo mount -vt proc proc $LFS/proc
+sudo mount -vt sysfs sysfs $LFS/sys
+sudo mount -vt tmpfs tmpfs $LFS/run
 
 if [ -h $LFS/dev/shm ]; then
-    install -v -d -m 1777 $LFS$(realpath /dev/shm)
+    sudo install -v -d -m 1777 $LFS$(realpath /dev/shm)
 else
-    mount -vt tmpfs -o nosuid,nodev tmpfs $LFS/dev/shm
+    sudo mount -vt tmpfs -o nosuid,nodev tmpfs $LFS/dev/shm
 fi
 
-chroot "$LFS" /usr/bin/env -i \
+sudo chroot "$LFS" /usr/bin/env -i \
     HOME=/root \
     TERM="$TERM" \
     PS1='(lfs chroot) \u:\w\$ ' \

@@ -6,10 +6,10 @@ prepareDir() {
     dir=$(tar -tf "$1" | head -1 | cut -f1 -d"/")
     echo "cd Into Directory: $dir"
     tar -xvf $1
-    pushd "$PWD/source/$dir"
+    pushd "$dir"
     $2
     popd
-    rm -rf "$PWD/source/$dir"
+    rm -rf "$dir"
     echo "------------ *************** -----------"
 }
 
@@ -35,6 +35,7 @@ install -dv -m 0750 /root
 install -dv -m 1777 /tmp /var/tmp
 
 #Essential Files and Symlinks
+[ -e /etc/mtab ] && rm -f /etc/mtab
 ln -sv /proc/self/mounts /etc/mtab
 
 cat >/etc/hosts <<EOF
@@ -107,6 +108,7 @@ InstallBison() {
     make
     make install
 }
+
 InstallPerl() {
     sh Configure -des \
         -D prefix=/usr \
@@ -155,6 +157,7 @@ installInstallUtilLinux() {
     make
     make install
 }
+pushd $LFS/sources
 
 prepareDir gettext-0.22.5.tar.xz InstallGettext
 prepareDir bison-3.8.2.tar.xz InstallBison
@@ -162,7 +165,7 @@ prepareDir perl-5.40.0.tar.xz InstallPerl
 prepareDir python-3.12.5 InstallPython
 prepareDir texinfo-7.1.tar.xz InstallTexinfo
 prepareDir util-linux-2.40.2.tar.xz InstallUtilLinux
-
+popd
 # Cleaning
 rm -rf /usr/share/{info,man,doc}/*
 
